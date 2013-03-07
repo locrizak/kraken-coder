@@ -1,1 +1,6 @@
 All the code for krakencoder.com
+
+
+To startup coffeescript
+cd /web
+coffee -o js/ -cw src/
