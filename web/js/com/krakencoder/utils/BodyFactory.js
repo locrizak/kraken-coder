@@ -9,48 +9,137 @@
   w = this;
 
   pkg.utils.BodyFactory = (function() {
+    var _world;
 
-    BodyFactory.prototype._kc = pkg.utils.KrackConverter;
+    function BodyFactory() {}
 
-    BodyFactory.world = null;
+    _world = null;
 
-    function BodyFactory() {
-      /*
-      			Util method to create a body body
-      				@method createbox
-      				@public
-      				@param {int} the x position of the body in pixels
-      				@param {int} the y position of the body in pixels
-      				@param {int} the width of the body
-      				@param {int} the height of the body
-      				@param {boolean:false} if the body is dynamic or not
-      				@param {string} data to attach to the body for use later
-      */
-      this.createBox = function(px, py, w, h, d, isSen, ud) {
-        var bodyDef, fixDef, shape;
-        if (d == null) {
-          d = false;
-        }
-        if (isSen == null) {
-          isSen = false;
-        }
-        if (ud == null) {
-          ud = "";
-        }
-        bodyDef = new w.b2BodyDef();
-        shape = new w.b2PolygonShape();
-        fixDef = new w.b2FictureDef();
-        bodyDef.position.Set(this._kc.getMeters(px), this._kc.getMeters(py));
-        if (d) {
-          bodyDef.type = w.b2Body.b2_dynamicBody;
-        }
-        shape.SetAsBox(this._kc.getMeters(w), this._kc.getMeters(h));
-        fixDef.isSensor = isSen;
-        fixDef.shape = shape;
-        fixDef.userData = ud;
-        return body;
-      };
-    }
+    /*
+    		@method createbox - Util method to create a body body
+    			@param {int} the x position of the body in pixels
+    			@param {int} the y position of the body in pixels
+    			@param {int} the width of the body
+    			@param {int} the height of the body
+    			@param {boolean:false} if the body is dynamic or not
+    			@param {string} data to attach to the body for use later
+    */
+
+
+    BodyFactory.createBox = function(px, py, wid, h, d, isSen, ud) {
+      var body, bodyDef, filter, fixDef, fixList, kc, shape;
+      if (this._world === null) {
+        throw "World need to be set. To set it call com.krakencoder.utils.BodyFactory.setWorld(world)";
+      }
+      if (d == null) {
+        d = false;
+      }
+      if (isSen == null) {
+        isSen = false;
+      }
+      if (ud == null) {
+        ud = "";
+      }
+      kc = pkg.utils.KrackConverter;
+      bodyDef = new w.b2BodyDef();
+      shape = new w.b2PolygonShape();
+      fixDef = new w.b2FixtureDef();
+      bodyDef.position.Set(kc.getMeters(px), kc.getMeters(py));
+      if (d) {
+        bodyDef.type = w.b2Body.b2_dynamicBody;
+      }
+      shape.SetAsBox(kc.getMeters(wid), kc.getMeters(h));
+      fixDef.isSensor = isSen;
+      fixDef.shape = shape;
+      fixDef.userData = ud;
+      body = this._world.CreateBody(bodyDef);
+      body.SetUserData(ud);
+      body.CreateFixture(fixDef);
+      fixList = body.GetFixtureList();
+      filter = fixList.GetFilterData();
+      filter.groupIndex = 2;
+      fixList.SetFilterData(filter);
+      return body;
+    };
+
+    /*
+    		Util method to create a body body
+    		@method createBox
+    			@param {int} the width of the fixture
+    			@param {int} the height of the fixture
+    			@param {int} the x position of the body
+    			@param {int} the y position of the body
+    			@param {boolean} if the fixture is a sensor 
+    			@param {int} The density of the fixture
+    			@param {int} the friction of the body
+    			@param {int} the restitution of the body
+    */
+
+
+    BodyFactory.createBoxFixture = function(wid, h, x, y, s, ud, d, f, r, mask) {
+      var fixDef, kc, shape;
+      if (this._world === null) {
+        throw "World need to be set. To set it call com.krakencoder.utils.BodyFactory.setWorld(world)";
+      }
+      if (x == null) {
+        x = 0;
+      }
+      if (y == null) {
+        y = 0;
+      }
+      if (s == null) {
+        s = false;
+      }
+      kc = pkg.utils.KrackConverter;
+      fixDef = new w.b2FixtureDef();
+      shape = new w.b2PolygonShape();
+      shape.SetAsOrientedBox(kc.getMeters(wid), kc.getMeters(h), new w.b2Vec2(kc.getMeters(x), kc.getMeters(y)));
+      fixDef.isSensor = s;
+      fixDef.shape = shape;
+      fixDef.userData = ud;
+      return BodyFactory.applyFixtureProps(fixDef, s, d, f, r);
+    };
+
+    BodyFactory.createCircleFixture = function(wid, x, y, s, ud, d, f, r, mask) {
+      var fixDef, kc, shape;
+      if (this._world === null) {
+        throw "World need to be set. To set it call com.krakencoder.utils.BodyFactory.setWorld(world)";
+      }
+      if (x == null) {
+        x = 0;
+      }
+      if (y == null) {
+        y = 0;
+      }
+      if (s == null) {
+        s = false;
+      }
+      kc = pkg.utils.KrackConverter;
+      fixDef = new w.b2FixtureDef();
+      shape = new w.b2CircleShape(kc.getMeters(wid));
+      shape.m_p.Set(kc.getMeters(x), kc.getMeters(y));
+      fixDef.isSensor = s;
+      fixDef.userData = ud;
+      fixDef.shape = shape;
+      return BodyFactory.applyFixtureProps(fixDef, d, f, r);
+    };
+
+    BodyFactory.applyFixtureProps = function(fixDef, d, f, r) {
+      if (d) {
+        fixDef.density = d;
+      }
+      if (f) {
+        fixDef.friction = f;
+      }
+      if (r) {
+        fixDef.restitution = r;
+      }
+      return fixDef;
+    };
+
+    BodyFactory.setWorld = function(world) {
+      return this._world = world;
+    };
 
     return BodyFactory;
 

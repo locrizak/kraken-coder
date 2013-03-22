@@ -23,28 +23,40 @@ class pkg.Kraken
 	#private methods
 	_onConnect : ->
 		@_buildWorld()
-		@_world = new pkg.KrakenWorld()
+		@_world = new pkg.KrakenWorld(true)
+
+		@_world.addDude("abc", true)
 
 	_buildWorld : ->
 		if ($("#krack-world-container").length > 0 )
 			$("<canvas></canvas>")
 				.attr({
 					id:"krack-world"
-					width:$(window).width()
-					height:$(window).height()
+					#width:$(window).width()
+					#height:$(window).height()
+					width:consts.worldWidth,
+					height:consts.worldHeight
 				})
-				.appendTo("#krack-world-container")
+				#.appendTo("#krack-world-container")
 			$("<canvas></canvas>")
 				.attr({
 					id:"krack-world-debug"
-					width:$(window).width()
-					height:$(window).height()
+					#width:$(window).width()
+					#height:$(window).height()
+					width:consts.worldWidth,
+					height:consts.worldHeight
 				})
 				.appendTo("#krack-world-container")
+			$("#krack-world-container").css(
+				#width: $(window).width()
+				#height: $(window).height()
+				width:consts.worldWidth,
+				height:consts.worldHeight
+			)
 			@_$canvas = $("#krack-world")
 			@_$debugCanvas = $("#krack-world-debug")
-			consts.canvas = document.getElementById("krack-world")
-			consts.context = consts.canvas.getContext("2d")
+			#consts.canvas = document.getElementById("krack-world")
+			#consts.context = consts.canvas.getContext("2d")
 			consts.debugCanvas = document.getElementById("krack-world-debug")
 			consts.debugContext = consts.debugCanvas.getContext("2d")
 			consts.$canvasContainer = $("#krack-world-container")

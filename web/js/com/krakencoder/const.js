@@ -7,7 +7,11 @@
   window.namespace = {
     com: {
       krakencoder: {
-        utils: {}
+        utils: {},
+        display: {
+          dudes: {}
+        },
+        ui: {}
       }
     }
   };

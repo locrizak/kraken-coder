@@ -4,6 +4,9 @@ window.namespace =
 	com : 
 		krakencoder : 
 			utils : {}
+			display :
+				dudes :{}
+			ui : {}
 
 window.pkg = window.namespace.com.krakencoder
 

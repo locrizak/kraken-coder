@@ -36,25 +36,28 @@
 
     Kraken.prototype._onConnect = function() {
       this._buildWorld();
-      return this._world = new pkg.KrakenWorld();
+      this._world = new pkg.KrakenWorld(true);
+      return this._world.addDude("abc", true);
     };
 
     Kraken.prototype._buildWorld = function() {
       if ($("#krack-world-container").length > 0) {
         $("<canvas></canvas>").attr({
           id: "krack-world",
-          width: $(window).width(),
-          height: $(window).height()
-        }).appendTo("#krack-world-container");
+          width: consts.worldWidth,
+          height: consts.worldHeight
+        });
         $("<canvas></canvas>").attr({
           id: "krack-world-debug",
-          width: $(window).width(),
-          height: $(window).height()
+          width: consts.worldWidth,
+          height: consts.worldHeight
         }).appendTo("#krack-world-container");
+        $("#krack-world-container").css({
+          width: consts.worldWidth,
+          height: consts.worldHeight
+        });
         this._$canvas = $("#krack-world");
         this._$debugCanvas = $("#krack-world-debug");
-        consts.canvas = document.getElementById("krack-world");
-        consts.context = consts.canvas.getContext("2d");
         consts.debugCanvas = document.getElementById("krack-world-debug");
         consts.debugContext = consts.debugCanvas.getContext("2d");
         consts.$canvasContainer = $("#krack-world-container");

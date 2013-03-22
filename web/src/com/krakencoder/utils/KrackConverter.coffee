@@ -4,9 +4,9 @@ w = this
 
 class pkg.utils.KrackConverter
 
-	_RATIO = 30
+	@_RATIO = 30
 
-	@getPixels : (meters) ->
-		meters*@_RATIO
-	@getMeters : (pixels) ->
-		pixels/@_RATIO 
+	@getPixels = (meters) ->
+		meters*pkg.utils.KrackConverter._RATIO
+	@getMeters = (pixels) ->
+		pixels/pkg.utils.KrackConverter._RATIO 

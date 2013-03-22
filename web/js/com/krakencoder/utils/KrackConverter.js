@@ -9,18 +9,17 @@
   w = this;
 
   pkg.utils.KrackConverter = (function() {
-    var _RATIO;
 
     function KrackConverter() {}
 
-    _RATIO = 30;
+    KrackConverter._RATIO = 30;
 
     KrackConverter.getPixels = function(meters) {
-      return meters * this._RATIO;
+      return meters * pkg.utils.KrackConverter._RATIO;
     };
 
     KrackConverter.getMeters = function(pixels) {
-      return pixels / this._RATIO;
+      return pixels / pkg.utils.KrackConverter._RATIO;
     };
 
     return KrackConverter;
